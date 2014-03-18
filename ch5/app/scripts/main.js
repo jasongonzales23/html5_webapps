@@ -39,3 +39,10 @@ if (Modernizr.localstorage) {
 else {
 	console.log('does not work');
 }
+
+var source = $("#list-template").html();
+var template = Handlebars.compile(source);
+var data = {beers: beers};
+//var data = {title: "This is the title", body: "This is the body!"};
+var html = template(data);
+$("#full-list").append(html);
