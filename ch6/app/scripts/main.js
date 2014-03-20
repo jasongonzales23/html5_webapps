@@ -3,6 +3,8 @@ var hideShowFunction = function (evt) {
   	var data = eventTarget.data();
   	$('.view').removeClass('active');
   	$(data.target).addClass('active');
+
+  	renderTemplate(data.target, data.item);
 }
 
 $('body').on('click', '.view-switcher', function(evt){
@@ -40,9 +42,26 @@ else {
 	console.log('does not work');
 }
 
-var source = $("#list-template").html();
-var template = Handlebars.compile(source);
-var data = {beers: beers};
-//var data = {title: "This is the title", body: "This is the body!"};
-var html = template(data);
-$("#full-list").append(html);
+var renderTemplate = function(target, itemId) {
+	var targetTemplate = target + '-template';
+	var source = $(targetTemplate).html();
+	var template = Handlebars.compile(source);
+	//var data = {beers: beers};
+	//var data = {title: "This is the title", body: "This is the body!"};
+	// actual data!
+	var data;
+	if (itemId) { 
+		var arr = $.grep( beers, function(beer, i){
+			return beer.id == itemId;
+		});
+
+		data = arr[0];
+	}
+	else {
+		data = { beers: beers };
+	}
+	var html = template(data);
+	$(target).html(html);
+}
+
+renderTemplate('#full-list');

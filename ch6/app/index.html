@@ -39,19 +39,14 @@
 
             <div class="row">
                 <div class="col-lg-12 view active" id="full-list">
-                    <div class="list-group">
-                        <script id="list-template" type="text/x-handlebars-template">
-                            {{#each beers}}
-                            <a data-target="#item-detail" href="#" class="list-group-item view-switcher">{{title}}</a>
-                            {{/each}}
+                        <script id="full-list-template" type="text/x-handlebars-template">
+                            <div class="list-group">
+                                {{#each beers}}
+                                <a data-item={{id}} data-target="#item-detail" href="#" class="list-group-item view-switcher">{{title}}</a>
+                                {{/each}}
+                            </div>
                         </script>
-                    </div>
                 </div><!-- end full-list -->
-
-                <script id="list-template" type="text/x-handlebars-template">
-                    <p>{{title}}</p>
-                    <p>{{body}}<p>
-                </script>
 
                 <div class="col-lg-12 view" id="add-item">
                     <h3>Add Item</h3>
@@ -82,28 +77,38 @@
                 </div><!-- end add-item-->
 
                 <div class="col-lg-12 view" id="item-detail">
-                    <h3>Item Detail</h3>
-                    <div class="list-group">
-                        <p id="show-title" class="list-group-item">Some title</p>   
-                        <p id="show-description" class="list-group-item">A description</p>
-                        <p id="show-image" class="list-group-item">
-                            <span class="label">Image:</span>
-                            <img src="">
-                        </p>
-                        <p id="show-location" class="list-group-item">Current Location: Lat 37, Long 122</p>
-                    </div>
-
-                    <p>
-                        <button data-target="#full-list" id="back-to-list" class="btn btn-lg btn-default view-switcher">Back to List</button>
-                        <button id="edit-item" class="btn btn-lg btn-default pull-right">Edit</button>
-                    </p>
-
+                    <!-- the detail view will render here -->
                 </div>
 
             </div>
 
         </div>
 
+        <script id="full-list-template" type="text/x-handlebars-template">
+            <div class="list-group">
+                {{#each beers}}
+                <a data-item={{id}} data-target="#item-detail" href="#" class="list-group-item view-switcher">{{title}}</a>
+                {{/each}}
+            </div>
+        </script>
+        
+        <script id="item-detail-template" type="text/x-handlebars-template">
+            <h3>Item Detail</h3>
+            <div class="list-group">
+                <p id="show-title" class="list-group-item">{{title}}</p>   
+                <p id="show-description" class="list-group-item">{{description}}</p>
+                <p id="show-image" class="list-group-item">
+                    <span class="label">Image:</span>
+                    <img src="">
+                </p>
+                <p id="show-location" class="list-group-item">Current Location: Lat {{location.latitude}}, Long {{location.longitude}}</p>
+            </div>
+
+            <p>
+                <button data-target="#full-list" id="back-to-list" class="btn btn-lg btn-default view-switcher">Back to List</button>
+                <button id="edit-item" class="btn btn-lg btn-default pull-right">Edit</button>
+            </p>
+        </script>
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
