@@ -1,3 +1,4 @@
+//functions
 var hideShowFunction = function (evt) {
 	var eventTarget = $(evt.target);
   	var data = eventTarget.data();
@@ -5,41 +6,6 @@ var hideShowFunction = function (evt) {
   	$(data.target).addClass('active');
 
   	renderTemplate(data.target, data.item);
-}
-
-$('body').on('click', '.view-switcher', function(evt){
-	hideShowFunction(evt);
-});
-
-if (Modernizr.localstorage) {
-	var beers = [
-		{
-			"id" : "1",
-			"title": "Pliny the Elder",
-			"description": "Good!",
-			"image": null,
-			"location": { "latitude": 37, "longitude": 122}
-		},
-		{
-			"id" : "2",
-			"title": "Pliny the Younger",
-			"description": "Great!",
-			"image": null,
-			"location": { "latitude": 37, "longitude": 122}
-		},
-		{
-			"id" : "3",
-			"title": "Racer 5",
-			"description": "Reliable!",
-			"image": null,
-			"location": { "latitude": 37, "longitude": 122}
-		}
-	];
-
-	localStorage.beers = JSON.stringify(beers);
-}
-else {
-	console.log('does not work');
 }
 
 var renderTemplate = function(target, itemId) {
@@ -50,7 +16,7 @@ var renderTemplate = function(target, itemId) {
 	//var data = {title: "This is the title", body: "This is the body!"};
 	// actual data!
 	var data;
-	if (itemId) { 
+	if (itemId) {
 		var arr = $.grep( beers, function(beer, i){
 			return beer.id == itemId;
 		});
@@ -62,6 +28,73 @@ var renderTemplate = function(target, itemId) {
 	}
 	var html = template(data);
 	$(target).html(html);
+}
+
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+var saveForm = function(result) {
+  var highestId = Math.max.apply(Math, beers.map(function(o){return o.id;}));
+  result.id = highestId > 0 ? highestId + 1 : 1;
+  beers.push(result);
+  localStorage.beers = JSON.stringify(beers);
+}
+
+var editForm = function(result) {
+  var resultInt = parseInt(result.id);
+  result.id = resultInt;
+  for (i in beers) {
+    if (beers[i].id === resultInt ) {
+      beers[i] = result;
+      localStorage.beers = JSON.stringify(beers);
+      break;
+    }
+  }
+}
+
+//event listeners
+$('body').on('click', '.view-switcher', function(evt){
+	hideShowFunction(evt);
+});
+
+$('body').on('submit','#add-form', function(evt){
+  var result = $(this).serializeObject();
+  saveForm(result);
+  return false;
+});
+
+$('body').on('submit','#edit-form', function(evt){
+  var result = $(this).serializeObject();
+  editForm(result);
+  return false;
+});
+
+//storage
+var beers;
+if (Modernizr.localstorage) {
+  if (localStorage.beers) {
+    beers = JSON.parse(localStorage.beers);
+  }
+  else {
+    beers = [];
+  }
+}
+else {
+	console.log('does not work');
 }
 
 renderTemplate('#full-list');
