@@ -47,14 +47,14 @@ $.fn.serializeObject = function()
     return o;
 };
 
-var saveForm = function(result) {
+var saveEntry = function(result) {
   var highestId = Math.max.apply(Math, beers.map(function(o){return o.id;}));
   result.id = highestId > 0 ? highestId + 1 : 1;
   beers.push(result);
   localStorage.beers = JSON.stringify(beers);
 }
 
-var editForm = function(result) {
+var editEntry = function(result) {
   var resultInt = parseInt(result.id);
   result.id = resultInt;
   for (i in beers) {
@@ -73,13 +73,14 @@ $('body').on('click', '.view-switcher', function(evt){
 
 $('body').on('submit','#add-form', function(evt){
   var result = $(this).serializeObject();
-  saveForm(result);
+  saveEntry(result);
+  renderTemplate('#full-list');
   return false;
 });
 
 $('body').on('submit','#edit-form', function(evt){
   var result = $(this).serializeObject();
-  editForm(result);
+  editEntry(result);
   return false;
 });
 
