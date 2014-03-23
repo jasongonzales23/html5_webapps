@@ -59,9 +59,13 @@
 
         <script id="full-list-template" type="text/x-handlebars-template">
             <div class="list-group">
+                {{#if beers}}
                 {{#each beers}}
                 <a data-item={{id}} data-target="#item-detail" href="#" class="list-group-item view-switcher">{{title}}</a>
                 {{/each}}
+                {{else}}
+                <h3>No items here yet! Click 'Add' to get started!</h3>
+                {{/if}}
             </div>
         </script>
 
