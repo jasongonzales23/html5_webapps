@@ -81,6 +81,7 @@ $('body').on('submit','#add-form', function(evt){
 $('body').on('submit','#edit-form', function(evt){
   var result = $(this).serializeObject();
   editEntry(result);
+  renderTemplate('#full-list');
   return false;
 });
 
@@ -98,4 +99,5 @@ else {
 	console.log('does not work');
 }
 
+//init
 renderTemplate('#full-list');
