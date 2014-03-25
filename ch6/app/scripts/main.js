@@ -12,7 +12,7 @@ $('body').on('click', '.view-switcher', function(evt){
 });
 
 if (Modernizr.localstorage) {
-	var beers = [
+	
 		{
 			"id" : "1",
 			"title": "Pliny the Elder",
@@ -26,7 +26,7 @@ if (Modernizr.localstorage) {
 			"description": "Great!",
 			"image": null,
 			"location": { "latitude": 37, "longitude": 122}
-		},
+		},var beers = [
 		{
 			"id" : "3",
 			"title": "Racer 5",
