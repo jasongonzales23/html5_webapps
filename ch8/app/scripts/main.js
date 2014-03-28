@@ -6,7 +6,7 @@ var hideShowFunction = function (evt) {
   	$(data.target).addClass('active');
 
   	renderTemplate(data.target, data.item);
-}
+};
 
 var renderTemplate = function(target, itemId) {
 	var targetTemplate = target + '-template';
@@ -28,7 +28,7 @@ var renderTemplate = function(target, itemId) {
 	}
 	var html = template(data);
 	$(target).html(html);
-}
+};
 
 $.fn.serializeObject = function()
 {
@@ -52,7 +52,7 @@ var saveEntry = function(result) {
   result.id = highestId > 0 ? highestId + 1 : 1;
   beers.push(result);
   localStorage.beers = JSON.stringify(beers);
-}
+};
 
 var editEntry = function(result) {
   var resultInt = parseInt(result.id);
@@ -65,6 +65,60 @@ var editEntry = function(result) {
     }
   }
 }
+
+navigator.getUserMedia = navigator.getUserMedia 
+  || navigator.webkitGetUserMedia 
+  || navigator.mozGetUserMedia 
+  || navigator.msGetUserMedia 
+  || false;
+
+var localMediaStream;
+
+var fallback = function(){
+  alert('this is the fallback');
+}
+
+var accessCamera = function(data){
+  if (navigator.getUserMedia) {
+    navigator.getUserMedia(
+      {video: true},
+      function(stream){
+        var video = document.querySelector('#' + data + '-video');
+        video.src = window.URL.createObjectURL(stream);
+        localMediaStream = stream;
+        //swap out the button!
+        var cameraTemplate = '#' + data + '-photo';
+        renderTemplate(cameraTemplate);
+        $('.access-camera').hide();
+      }, fallback
+    );
+  }
+  else {
+    alert('no dice');
+  }
+};
+
+var shootPhoto = function(data){
+  var canvas = document.querySelector('#' + data + '-photo-canvas');
+  var ctx = canvas.getContext('2d');
+  var video = document.querySelector('#' + data + '-video');
+  if(localMediaStream){
+    ctx.drawImage(video, 0, 0)
+    var canvasData = canvas.toDataURL('image/webp');
+    document.querySelector('#' + data +'-photo-image').src = canvasData;
+    document.querySelector('#' + data + '-photo-input').value = canvasData;
+  }
+};
+
+var displayOnlineStatus = document.getElementById("network-status");
+var isOnline = function () {
+  displayOnlineStatus.innerHTML = "Online";
+  displayOnlineStatus.className = "label-success label pull-right";
+};
+var isOffline = function ()   {
+  displayOnlineStatus.innerHTML = "Offline";
+  displayOnlineStatus.className = "label-danger label pull-right";
+};
 
 //event listeners
 $('body').on('click', '.view-switcher', function(evt){
@@ -85,6 +139,24 @@ $('body').on('submit','#edit-form', function(evt){
   return false;
 });
 
+$('body').on('click', '.access-camera', function(evt){
+  var data = this.dataset.camera;
+  accessCamera(data);
+});
+
+$('body').on('click', '.shoot', function(){
+  var data = this.dataset.camera;
+  shootPhoto(data);
+});
+
+if (window.addEventListener) {
+  window.addEventListener("online", isOnline, false);
+  window.addEventListener("offline", isOffline, false);
+}
+else {
+  document.body.ononline = isOnline;
+  document.body.onoffline = isOffline;
+}
 //storage
 var beers;
 if (Modernizr.localstorage) {
