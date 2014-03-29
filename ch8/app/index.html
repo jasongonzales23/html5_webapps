@@ -78,7 +78,7 @@
                     <span class="label">Image:</span>
                     <img src="{{image}}">
                 </p>
-                <p id="show-location" class="list-group-item">Current Location: Lat {{location.latitude}}, Long {{location.longitude}}</p>
+                <p id="show-location" class="list-group-item">Location: Lat {{location.latitude}}, Long {{location.longitude}}</p>
             </div>
 
             <p>
@@ -90,6 +90,12 @@
 
         <script id="add-photo-template" type="text/x-handlebars-template">
           <button type="button" data-camera="add" class="shoot btn btn-lg btn-success pull-right">Take photo</button>
+        </script>
+
+
+        <script id="add-location-template" type="text/x-handlebars-template">
+          <input type="hidden" id="location" name="location" value={{location.string}} >
+          <p><strong>Current Location: Lat {{location.coords.latitude}}, Long {{location.coords.longitude}}</strong></p>
         </script>
 
         <script id="add-item-template" type="text/x-handlebars-template">
@@ -115,7 +121,7 @@
                   <div id="add-photo"></div>
               </div>
               <div class="form-group">
-                  <p><strong>Current Location: Lat 37, Long 122</strong></p>
+                  <div id="add-location">Getting current location...</div>
               </div>
 
               <div class="form-group">
@@ -152,7 +158,7 @@
                   <div id="edit-photo"></div>
               </div>
               <div class="form-group">
-                  <p><strong>Current Location: Lat 37, Long 122</strong></p>
+                  <p><strong>Location: Lat {{location.latitude}}, Long {{location.longitude}}</strong></p>
               </div>
 
               <div class="form-group">
