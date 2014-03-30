@@ -28,6 +28,10 @@ var renderTemplate = function(target, itemId) {
 	}
 	var html = template(data);
 	$(target).html(html);
+
+  if ($(target).find('#add-location').length > 0){
+    getCurrentLocation(renderCurrentLocation);
+  }
 }
 
 $.fn.serializeObject = function()
@@ -50,6 +54,9 @@ $.fn.serializeObject = function()
 var saveEntry = function(result) {
   var highestId = Math.max.apply(Math, beers.map(function(o){return o.id;}));
   result.id = highestId > 0 ? highestId + 1 : 1;
+  if (result.location){
+    result.location = JSON.parse(result.location);
+  }
   beers.push(result);
   localStorage.beers = JSON.stringify(beers);
 }
@@ -120,6 +127,26 @@ var isOffline = function ()   {
   displayOnlineStatus.innerHTML = "Offline";
   displayOnlineStatus.className = "label-danger label pull-right";
 };
+
+var getCurrentLocation = function(cb) {
+  if(Modernizr.geolocation){
+    navigator.geolocation.getCurrentPosition(cb);
+  }
+  else {
+    //do something else
+  }
+};
+
+var renderCurrentLocation = function(location) {
+  var target = $('#add-location');
+  var source = $('#add-location-template').html();
+  var template = Handlebars.compile(source);
+  location.string = JSON.stringify(location.coords);
+  var data = {location: location};
+  var html = template(data);
+  $(target).html(html);
+}
+
 
 //event listeners
 $('body').on('click', '.view-switcher', function(evt){
