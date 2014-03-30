@@ -146,6 +146,44 @@ var getCurrentLocation = function(cb) {
   }
 };
 
+var final_transcript = '';
+var recognizing = false;
+
+var recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
+
+recognition.onstart = function() {
+  recognizing = true;
+};
+
+recognition.onerror = function(event) {
+};
+
+recognition.onresult = function(event) {
+  final_transcript = event.results[0][0].transcript;
+};
+
+recognition.onend = function() {
+  recognizing = false;
+  if (!final_transcript) {
+    return;
+  }
+  $('.description').html(final_transcript);
+};
+
+var toggleTranscription = function(evt){
+  var btn = evt.target;
+  if (recognizing) {
+    recognition.stop();
+    btn.innerHTML = 'Transcribe';
+    return;
+  }
+  final_transcript = '';
+  btn.innerHTML = 'Stop';
+  recognition.start();
+};
+
 //event listeners
 $('body').on('click', '.view-switcher', function(evt){
 	hideShowFunction(evt);
@@ -183,6 +221,11 @@ else {
   document.body.ononline = isOnline;
   document.body.onoffline = isOffline;
 }
+
+$('body').on('click', '.transcribe', function(evt){
+  toggleTranscription(evt);
+});
+
 //storage
 var beers;
 if (Modernizr.localstorage) {
