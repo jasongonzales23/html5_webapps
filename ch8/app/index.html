@@ -76,7 +76,7 @@
                 <p id="show-description" class="list-group-item">{{description}}</p>
                 <p id="show-image" class="list-group-item">
                     <span class="label">Image:</span>
-                    <img src="">
+                    <img src="{{image}}">
                 </p>
                 <p id="show-location" class="list-group-item">Current Location: Lat {{location.latitude}}, Long {{location.longitude}}</p>
             </div>
@@ -87,6 +87,9 @@
             </p>
         </script>
 
+        <script id="add-photo-template" type="text/x-handlebars-template">
+          <button type="button" data-camera="add" class="shoot btn btn-lg btn-success pull-right">Take photo</button>
+        </script>
         <script id="add-item-template" type="text/x-handlebars-template">
           <h3>Add Item</h3>
           <form id="add-form" role="form">
@@ -102,7 +105,13 @@
                   <button id="transcribe" class="btn btn-lg btn-info pull-right">Transcribe</button>
               </div>
               <div class="form-group clearfix">
-                  <button id="upload-photo" class="btn btn-lg btn-success pull-right">Upload a photo</button>
+                <input type="hidden" id="add-photo-input" name="image" value>
+                <video id="add-video" class="pull-left" autoplay></video>
+                <img id="add-photo-image" class="pull-left photo" src>
+                <canvas id="add-photo-canvas" class="hidden" width=640 height=480 ></canvas>
+                <button data-camera="add" type="button" class="access-camera btn btn-lg btn-success pull-right">Add a photo</button>
+                <div id="add-photo"></div>
+
               </div>
               <div class="form-group">
                   <p><strong>Current Location: Lat 37, Long 122</strong></p>
@@ -115,6 +124,9 @@
           </form>
         </script>
 
+        <script id="edit-photo-template" type="text/x-handlebars-template">
+          <button type="button" data-camera="edit" class="shoot btn btn-lg btn-success pull-right">Take photo</button>
+        </script> 
         <script id="edit-item-template" type="text/x-handlebars-template">
           <h3>Edit Item</h3>
           <form id="edit-form" role="form">
@@ -131,7 +143,12 @@
                   <button id="transcribe" class="btn btn-lg btn-info pull-right">Transcribe</button>
               </div>
               <div class="form-group clearfix">
-                  <button id="upload-photo" class="btn btn-lg btn-success pull-right">Upload a photo</button>
+                  <input type="hidden" id="edit-photo-input" name="image" value>
+                  <video id="edit-video" class="pull-left" autoplay></video>
+                  <img id="edit-photo-image" class="pull-left photo" src="{{image}}">
+                  <canvas id="edit-photo-canvas" class="hidden" width=640 height=480 ></canvas>
+                  <button data-camera="edit" type="button" class="access-camera btn btn-lg btn-success pull-right">Change photo</button>
+                  <div id="edit-photo"></div> 
               </div>
               <div class="form-group">
                   <p><strong>Current Location: Lat 37, Long 122</strong></p>

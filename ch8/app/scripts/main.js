@@ -66,6 +66,50 @@ var editEntry = function(result) {
   }
 }
 
+navigator.getUserMedia = 
+  navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || false;
+
+var localMediaStream;
+
+var fallback = function(){
+  alert('this is the fallback');
+}
+
+var accessCamera = function(data){
+  if (navigator.getUserMedia) {
+    navigator.getUserMedia(
+      {video: true},
+      function(stream){
+        var video = document.querySelector('#' + data + '-video');
+        video.src = window.URL.createObjectURL(stream);
+        localMediaStream = stream;
+        //swap out the button!
+        var cameraTemplate = '#' + data + '-photo';
+        renderTemplate(cameraTemplate);
+        $('.access-camera').hide();
+      }, fallback
+    );
+    var cameraTemplate = '#' + data + '-photo';
+    renderTemplate(cameraTemplate);
+    $('.access-camera').hide();
+  }
+  else {
+    alert('no dice');
+  }
+};
+
+var shootPhoto = function(data){
+  var canvas = document.querySelector('#' + data + '-photo-canvas');
+  var ctx = canvas.getContext('2d');
+  var video = document.querySelector('#' + data + '-video');
+  if(localMediaStream){
+    ctx.drawImage(video, 0, 0)
+    var canvasData = canvas.toDataURL('image/webp');
+    document.querySelector('#' + data +'-photo-image').src = canvasData;
+    document.querySelector('#' + data + '-photo-input').value = canvasData;
+  }
+};
+
 //event listeners
 $('body').on('click', '.view-switcher', function(evt){
 	hideShowFunction(evt);
@@ -83,6 +127,16 @@ $('body').on('submit','#edit-form', function(evt){
   editEntry(result);
   renderTemplate('#full-list');
   return false;
+});
+
+$('body').on('click', '.access-camera', function(){
+  var data = this.dataset.camera;
+  accessCamera(data);
+});
+
+$('body').on('click', '.shoot', function(){
+  var data = this.dataset.camera;
+  shootPhoto(data);
 });
 
 //storage
