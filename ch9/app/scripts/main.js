@@ -110,6 +110,17 @@ var shootPhoto = function(data){
   }
 };
 
+var displayOnlineStatus = document.getElementById("network-status");
+
+var isOnline = function () {
+  displayOnlineStatus.innerHTML = "Online";
+  displayOnlineStatus.className = "label-success label pull-right";
+};
+var isOffline = function ()   {
+  displayOnlineStatus.innerHTML = "Offline";
+  displayOnlineStatus.className = "label-danger label pull-right";
+};
+
 //event listeners
 $('body').on('click', '.view-switcher', function(evt){
 	hideShowFunction(evt);
@@ -139,6 +150,14 @@ $('body').on('click', '.shoot', function(){
   shootPhoto(data);
 });
 
+if (window.addEventListener){
+  window.addEventListener("online", isOnline, false);
+  window.addEventListener("offline", isOffline, false);
+}
+else {
+  document.body.ononline = isOnline;
+  document.body.onoffline = isOffline;
+}
 //storage
 var beers;
 if (Modernizr.localstorage) {
